@@ -26,7 +26,7 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/customer_support/css/customer_support.css"
-# app_include_js = "/assets/customer_support/js/customer_support.js"
+app_include_js = "/assets/customer_support/js/global_support_button.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/customer_support/css/customer_support.css"
@@ -39,12 +39,36 @@ app_license = "mit"
 # webform_include_js = {"doctype": "public/js/doctype.js"}
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
-# include js in page
-# page_js = {"page" : "public/js/file.js"}
-
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_js = {
+	"Sales Invoice": "public/js/global_support_button.js",
+	"HD Ticket": "public/js/hd_ticket.js",
+	"Task": "public/js/task_extra_hours.js",
+	# Add support button to common doctypes
+	"Customer": "public/js/global_support_button.js",
+	"Supplier": "public/js/global_support_button.js", 
+	"Item": "public/js/global_support_button.js",
+	"Employee": "public/js/global_support_button.js",
+	"Attendance": "public/js/global_support_button.js",
+	"Leave Application": "public/js/global_support_button.js",
+	"Sales Order": "public/js/global_support_button.js",
+	"Purchase Order": "public/js/global_support_button.js",
+	"Purchase Invoice": "public/js/global_support_button.js",
+	"Payment Entry": "public/js/global_support_button.js",
+	"Journal Entry": "public/js/global_support_button.js",
+	"Stock Entry": "public/js/global_support_button.js",
+	"Delivery Note": "public/js/global_support_button.js",
+	"Purchase Receipt": "public/js/global_support_button.js",
+	"Material Request": "public/js/global_support_button.js",
+	"Lead": "public/js/global_support_button.js",
+	"Opportunity": "public/js/global_support_button.js",
+	"Project": "public/js/global_support_button.js",
+	"Issue": "public/js/global_support_button.js",
+	"Quotation": "public/js/global_support_button.js",
+}
+doctype_list_js = {
+	"Task": "public/js/task_list.js",
+}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -84,6 +108,23 @@ app_license = "mit"
 
 # before_install = "customer_support.install.before_install"
 # after_install = "customer_support.install.after_install"
+
+# Fixtures
+# --------
+
+fixtures = [
+    {
+        "doctype": "Custom Field",
+        "filters": {"dt": "HD Ticket"}
+    },
+    {
+        "doctype": "Custom Field", 
+        "filters": {"dt": "Task"}
+    },
+    "customer_support/fixtures/custom_field_hd_ticket_connections.json",
+    "customer_support/fixtures/custom_field_hd_ticket_screenshot.json",
+    "customer_support/fixtures/custom_field_hd_ticket_created_datetime.json"
+]
 
 # Uninstallation
 # ------------
@@ -129,42 +170,47 @@ app_license = "mit"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Project": "customer_support.customer_support.doctype.project.project.Project",
+	"Task": "customer_support.customer_support.doctype.task.task.Task",
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"HD Ticket": {
+		"autoname": "customer_support.customer_support.doctype.hd_ticket.hd_ticket.set_custom_naming_series",
+		"before_insert": "customer_support.customer_support.doctype.hd_ticket.hd_ticket.set_default_values",
+		"after_insert": [
+			"customer_support.customer_support.doctype.hd_ticket.hd_ticket.prevent_auto_assignment",
+			"customer_support.customer_support.notification_system.on_ticket_insert"
+		],
+		"on_update": [
+			"customer_support.customer_support.doctype.hd_ticket.hd_ticket.auto_create_task_on_assignment",
+			"customer_support.customer_support.notification_system.on_ticket_update",
+			"customer_support.customer_support.scheduler.handle_status_reply_reset"
+		],
+	},
+	"Extra Hour Request": {
+		"after_insert": "customer_support.customer_support.doctype.extra_hour_request.extra_hour_request.send_manager_notification"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"customer_support.tasks.all"
-# 	],
-# 	"daily": [
-# 		"customer_support.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"customer_support.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"customer_support.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"customer_support.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"cron": {
+		"* * * * *": [  # Every minute
+			"customer_support.customer_support.scheduler.check_escalation_notifications"
+		],
+		"* * * * *": [  # Every minute
+			"customer_support.customer_support.sync_tickets.sync_remote_tickets"
+		]
+	}
+}
 
 # Testing
 # -------
@@ -177,6 +223,9 @@ app_license = "mit"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "customer_support.event.get_events"
 # }
+override_whitelisted_methods = {
+    "helpdesk.helpdesk.doctype.hd_ticket.api.get_ticket_customizations": "customer_support.customer_support.overrides.api.get_ticket_customizations"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -198,6 +247,7 @@ app_license = "mit"
 # ----------------
 # before_request = ["customer_support.utils.before_request"]
 # after_request = ["customer_support.utils.after_request"]
+after_request = ["customer_support.customer_support.portal_overrides.inject_helpdesk_script"]
 
 # Job Events
 # ----------
@@ -241,4 +291,3 @@ app_license = "mit"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-

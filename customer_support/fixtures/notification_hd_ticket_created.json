@@ -1,0 +1,30 @@
+[
+    {
+        "doctype": "Notification",
+        "module": "Customer Support",
+        "name": "HD Ticket Created - Client Notification",
+        "subject": "Support Ticket Created - {{ doc.name }}",
+        "document_type": "HD Ticket",
+        "event": "New",
+        "enabled": 1,
+        "send_to_all_assignees": 0,
+        "is_standard": 0,
+        "channel": "Email",
+        "email_template": "HD Ticket Acknowledgment",
+        "recipients": [
+            {
+                "receiver_type": "To",
+                "receiver_by": "Document Field",
+                "receiver_by_document_field": "raised_by"
+            }
+        ],
+        "condition": "doc.raised_by",
+        "property_setter": [],
+        "message": "Your support ticket {{ doc.name }} has been created successfully.",
+        "message_html": "<p>Your support ticket <strong>{{ doc.name }}</strong> has been created successfully.</p>",
+        "attach_print": 0,
+        "send_system_notification": 1,
+        "sender_email": "",
+        "sender": ""
+    }
+]

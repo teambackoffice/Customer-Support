@@ -1,0 +1,11 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "name": "HD Ticket - Estimate Resolution Time",
+  "owner": "Administrator",
+  "subject": "Resolution Estimate for your Support Ticket {{ doc.name }}",
+  "response": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;\">\n    <div style=\"background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n        <div style=\"text-align: center; margin-bottom: 30px;\">\n            <h2 style=\"color: #2c3e50; margin: 0; font-size: 24px;\">Resolution Time Estimate</h2>\n        </div>\n        \n        <p>Hello,</p>\n        <p>We have an estimated resolution time for your support ticket <strong>{{ doc.name }}</strong>.</p>\n\n        <div style=\"background-color: #e8f4fd; padding: 15px; border-left: 4px solid #3498db; margin: 20px 0;\">\n            <p style=\"margin: 0; font-size: 16px; color: #2c3e50;\"><strong>Estimated Resolution Time:</strong></p>\n            <p style=\"margin: 5px 0 0 0; font-size: 22px; color: #2980b9; font-weight: bold;\">{{ doc.custom_estimation_hours }} hours</p>\n        </div>\n\n        <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 20px;\">\n            <tr>\n                <td style=\"padding: 10px; border-bottom: 1px solid #ecf0f1; width: 30%; color: #7f8c8d; font-weight: bold;\">Ticket ID:</td>\n                <td style=\"padding: 10px; border-bottom: 1px solid #ecf0f1; color: #2c3e50;\">{{ doc.name }}</td>\n            </tr>\n            <tr>\n                <td style=\"padding: 10px; border-bottom: 1px solid #ecf0f1; color: #7f8c8d; font-weight: bold;\">Subject:</td>\n                <td style=\"padding: 10px; border-bottom: 1px solid #ecf0f1; color: #2c3e50;\">{{ doc.subject }}</td>\n            </tr>\n        </table>\n\n        <p>Our team is working on it, and we will do our best to resolve it within this timeframe. We will keep you updated on our progress.</p>\n        \n        <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1;\">\n            <p style=\"margin: 0; color: #7f8c8d; font-size: 14px;\">\n                Thank you for your patience.\n            </p>\n        </div>\n    </div>\n</div>",
+  "use_html": 1
+ }
+]

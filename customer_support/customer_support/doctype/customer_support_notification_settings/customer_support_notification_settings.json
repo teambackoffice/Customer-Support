@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-08-07 12:01:41.614070",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_notifications",
+  "company",
+  "default_from_email",
+  "escalation_minutes",
+  "escalation_excluded_statuses",
+  "escalation_condition",
+  "reply_to",
+  "section_break_5",
+  "notification_rules"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enable_notifications",
+   "fieldtype": "Check",
+   "label": "Enable Notifications"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "default_from_email",
+   "fieldtype": "Link",
+   "label": "Default From Email",
+   "options": "Email Account"
+  },
+  {
+   "default": "15",
+   "description": "Send escalation email if ticket is not resolved within this many minutes",
+   "fieldname": "escalation_minutes",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Escalation After (Minutes)"
+  },
+  {
+   "default": "Replied, Resolved, Closed",
+   "description": "Comma-separated list of statuses that should NOT trigger escalation",
+   "fieldname": "escalation_excluded_statuses",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "Exclude Status List"
+  },
+  {
+   "description": "Shows current escalation rule based on above settings",
+   "fieldname": "escalation_condition",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "Current Escalation Condition",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reply_to",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Reply To"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break",
+   "label": "Notification Rules"
+  },
+  {
+   "fieldname": "notification_rules",
+   "fieldtype": "Table",
+   "label": "Notification Rules",
+   "options": "Support Notification Rule"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-07 14:26:13.977017",
+ "modified_by": "Administrator",
+ "module": "Customer Support",
+ "name": "Customer Support Notification Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

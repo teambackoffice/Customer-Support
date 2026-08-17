@@ -1,0 +1,123 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "receiver_by",
+  "column_break_2",
+  "receiver_type",
+  "section_break_3",
+  "field_name",
+  "column_break_5",
+  "email_by_role",
+  "section_break_6",
+  "email_by_document_field",
+  "column_break_8",
+  "condition"
+ ],
+ "fields": [
+  {
+   "fieldname": "receiver_by",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Receiver By",
+   "options": "\nDocument Field\nRole\nEmail",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "receiver_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Receiver Type",
+   "options": "To\nCC\nBCC",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.receiver_by=='Document Field'",
+   "fieldname": "field_name",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Field Name",
+   "options": "\nraised_by\ncustom_assigned_to\nowner\ncustom_reference_document\ncontact\ncustomer\nagent_group"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.receiver_by=='Role'",
+   "fieldname": "email_by_role",
+   "fieldtype": "Link",
+   "label": "Role",
+   "options": "Role"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.receiver_by=='Email'",
+   "fieldname": "email_by_document_field",
+   "fieldtype": "Small Text",
+   "label": "Email",
+   "description": "Enter email addresses separated by commas"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "condition",
+   "fieldtype": "Code",
+   "label": "Condition",
+   "description": "Optional condition to check before sending"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Customer Support",
+ "name": "Notification Recipient",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Support Team",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

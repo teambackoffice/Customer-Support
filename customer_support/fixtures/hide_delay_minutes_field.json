@@ -1,0 +1,12 @@
+[
+    {
+        "doctype": "Property Setter",
+        "doc_type": "Support Notification Rule",
+        "doctype_or_field": "DocField",
+        "fieldname": "delay_minutes",
+        "name": "Support Notification Rule-delay_minutes",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": "1"
+    }
+]

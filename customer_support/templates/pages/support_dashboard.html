@@ -1,0 +1,210 @@
+<div class="support-dashboard-page">
+  <div class="dashboard-summary" id="ticket-summary"></div>
+  <div class="priority-panel">
+    <div class="panel-header">
+      <h2>Open ticket load by priority</h2>
+      <div class="panel-meta" id="queue-total">0 tickets in queue</div>
+    </div>
+    <div class="priority-track" id="priority-track"></div>
+    <div class="priority-legend" id="priority-legend"></div>
+  </div>
+</div>
+
+<style>
+  .support-dashboard-page {
+    font-family: Inter, "Segoe UI", sans-serif;
+    background: #edf1f5;
+    min-height: 100vh;
+    padding: 20px 24px 30px;
+    color: #1f2937;
+  }
+
+  .dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    gap: 22px;
+    margin-bottom: 26px;
+  }
+
+  .metric-card {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid #e0e5eb;
+    border-radius: 18px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    padding: 22px 24px 18px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .metric-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .metric-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .metric-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .metric-icon.red { background: #f4d5d6; color: #d64545; }
+  .metric-icon.green { background: #d7efe8; color: #1b9a7c; }
+  .metric-icon.gray { background: #e7eaee; color: #6b7280; }
+
+  .metric-value {
+    font-size: clamp(3.1rem, 4vw, 5rem);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    color: #111827;
+    margin-bottom: 14px;
+  }
+
+  .metric-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #6b7280;
+    margin-top: auto;
+  }
+
+  .metric-status .trend {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .metric-status .trend.up.red { color: #dc2626; }
+  .metric-status .trend.up.green { color: #0f9d87; }
+
+  .metric-progress {
+    margin-top: 14px;
+    height: 6px;
+    background: #dfe4ea;
+    border-radius: 999px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .metric-progress > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  .metric-progress.red > span { background: #e11d48; }
+  .metric-progress.green > span { background: #19a68d; }
+  .metric-progress.gray > span { background: #9aa3af; }
+
+  .metric-xsmall {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .priority-panel {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid #e0e5eb;
+    border-radius: 18px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    padding: 24px 24px 18px;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .panel-header h2 {
+    margin: 0;
+    font-size: clamp(1.2rem, 2vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    color: #1f2937;
+  }
+
+  .panel-meta {
+    color: #7b8492;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .priority-track {
+    width: 100%;
+    height: 22px;
+    display: flex;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e7ebef;
+    margin-bottom: 16px;
+  }
+
+  .priority-segment {
+    height: 100%;
+    display: block;
+  }
+
+  .priority-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 22px;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #1f2937;
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .legend-label {
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .legend-value {
+    color: #6b7280;
+    margin-left: 2px;
+  }
+
+  @media (max-width: 980px) {
+    .dashboard-summary {
+      grid-template-columns: 1fr;
+    }
+
+    .panel-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
