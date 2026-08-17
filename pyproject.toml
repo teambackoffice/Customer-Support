@@ -1,9 +1,9 @@
 [project]
 name = "customer_support"
 authors = [
-    { name = "nehala", email = "nahala@teambackoffice.com"}
+    { name = "Team Backoffice", email = "nahala@teambackoffice.com"}
 ]
-description = "A reliable ticket management solution to streamline customer support. Create, assign, track, and resolve support requests with ease."
+description = "A web-based ticket management system for managing customer support requests."
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
