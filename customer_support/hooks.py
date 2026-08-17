@@ -115,15 +115,12 @@ doctype_list_js = {
 fixtures = [
     {
         "doctype": "Custom Field",
-        "filters": {"dt": "HD Ticket"}
+        "filters": {"dt": ["in", ["HD Ticket", "Task"]]}
     },
     {
-        "doctype": "Custom Field", 
-        "filters": {"dt": "Task"}
-    },
-    "customer_support/fixtures/custom_field_hd_ticket_connections.json",
-    "customer_support/fixtures/custom_field_hd_ticket_screenshot.json",
-    "customer_support/fixtures/custom_field_hd_ticket_created_datetime.json"
+        "doctype": "Property Setter",
+        "filters": {"doc_type": ["in", ["HD Ticket", "Task"]]}
+    }
 ]
 
 # Uninstallation
