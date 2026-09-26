@@ -2,12 +2,11 @@
 # For license information, please see license.txt
 
 import json
-import re
 
 import frappe
 import requests
 from frappe import _
-from frappe.utils import now_datetime
+from frappe.utils import get_datetime_str, now_datetime
 
 
 # Fieldnames pulled from the remote HD Ticket and written to the local copy.
@@ -22,22 +21,20 @@ SYNC_FIELDS = [
     "customer",
     "contact",
     "custom_customer",
+    "custom_module",
     "first_responded_on",
     "resolution_date",
     "description",
 ]
 
 PAGE_LENGTH = 200
-
-
-def _slug(text):
-    return re.sub(r"[^a-z0-9]+", "-", (text or "").strip().lower()).strip("-")
+DEFAULT_TICKET_TYPE = "Technical Support"
+DEFAULT_STATUS = "Open"
 
 
 def _make_local_name(source, remote_name):
-    """Deterministic local name for a remote ticket (unique per source)."""
-    slug = _slug(source.site_name)[:24] or "remote"
-    return "SYNC-{0}-{1}".format(slug, (remote_name or "ticket"))[:130]
+    """Local name mirrors the remote ticket name (dedupe is per source)."""
+    return (remote_name or "ticket")[:130]
 
 
 def _ensure_unique_name(candidate):
@@ -72,8 +69,8 @@ def sync_remote_tickets(source_name=None):
     results = []
     for source in sources:
         try:
-            created, updated = _pull_source(source)
-            source.db_set("last_sync_on", now_datetime())
+            created, updated, last_modified = _pull_source(source)
+            source.db_set("last_sync_on", last_modified or now_datetime())
             _set_sync_status(source, "OK: {0} created, {1} updated".format(created, updated))
             frappe.db.commit()
             results.append(
@@ -113,10 +110,13 @@ def _pull_source(source):
         "order_by": "modified asc",
     }
     if source.last_sync_on:
-        params["filters"] = json.dumps([["modified", ">", source.last_sync_on]])
+        params["filters"] = json.dumps(
+            [["modified", ">", get_datetime_str(source.last_sync_on)]]
+        )
 
     created = 0
     updated = 0
+    max_modified = None
     limit_start = 0
     while True:
         page = dict(params)
@@ -128,6 +128,9 @@ def _pull_source(source):
             break
 
         for row in data:
+            modified = row.get("modified")
+            if modified and (max_modified is None or modified > max_modified):
+                max_modified = modified
             # Skip tickets that are themselves synced copies, to avoid ping-pong loops.
             if (row.get("custom_ticket_source") or "").strip():
                 continue
@@ -140,7 +143,7 @@ def _pull_source(source):
         if len(data) < PAGE_LENGTH:
             break
 
-    return created, updated
+    return created, updated, max_modified
 
 
 def _upsert_ticket(source, row):
@@ -159,6 +162,7 @@ def _upsert_ticket(source, row):
     if existing:
         values = {key: row.get(key) for key in SYNC_FIELDS}
         values["modified"] = row.get("modified") or now
+        _apply_defaults(values)
         _update_ticket(existing, values)
         return False
 
@@ -176,8 +180,17 @@ def _upsert_ticket(source, row):
     }
     for key in SYNC_FIELDS:
         values[key] = row.get(key)
+    _apply_defaults(values)
     _insert_ticket(values)
     return True
+
+
+def _apply_defaults(values):
+    """Static defaults applied to every synced ticket."""
+    values["ticket_type"] = DEFAULT_TICKET_TYPE
+    if not values.get("status"):
+        values["status"] = DEFAULT_STATUS
+    return values
 
 
 def _insert_ticket(values):

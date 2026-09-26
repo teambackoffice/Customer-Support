@@ -15,33 +15,48 @@ class HDTicket(Document):
 
 def get_company_abbreviation(user):
 	"""
-	Fetch company abbreviation from User's custom_company field
-	
+	Fetch company abbreviation from User's custom_company field.
+
 	Data Flow:
 	User (Logged-in User)
 	  ↓ custom_company (Link to Company)
 	  ↓ Company.abbr
-	
+
+	Falls back to: Global Defaults default company, then the first Company
+	record, then a generic "SUP" abbreviation so ticket creation never
+	fails on a fresh install with no company assigned.
+
 	Args:
 	    user: User email/name
-	
+
 	Returns:
 	    str: Company abbreviation
 	"""
-	# Get the custom_company field from User DocType
-	user_doc = frappe.get_doc("User", user)
+	# 1. Try the user's custom_company field
+	if user and user != "Guest":
+		try:
+			user_doc = frappe.get_doc("User", user)
+			if hasattr(user_doc, "custom_company") and user_doc.custom_company:
+				abbr = frappe.db.get_value("Company", user_doc.custom_company, "abbr")
+				if abbr:
+					return abbr
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "HD Ticket Company Abbreviation Error")
 
-	if not hasattr(user_doc, "custom_company") or not user_doc.custom_company:
-		frappe.throw(
-			_(
-				"No company assigned to user {0}. Please set the custom_company field in the User record."
-			).format(user)
-		)
+	# 2. Fall back to the default company from Global Defaults
+	default_company = frappe.db.get_single_value("Global Defaults", "default_company")
+	if default_company:
+		abbr = frappe.db.get_value("Company", default_company, "abbr")
+		if abbr:
+			return abbr
 
-	# Get the company abbreviation from Company DocType
-	company = frappe.get_doc("Company", user_doc.custom_company)
+	# 3. Fall back to the first Company record in the system
+	abbr = frappe.db.get_value("Company", {}, "abbr", order_by="name asc")
+	if abbr:
+		return abbr
 
-	return company.abbr
+	# 4. Generic fallback so naming never breaks
+	return "SUP"
 
 
 def get_next_sequence(company_abbr):

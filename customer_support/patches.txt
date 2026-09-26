@@ -4,3 +4,14 @@
 
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
+customer_support.patches.v1_0.add_custom_naming_series_field
+customer_support.patches.v1_0.add_hd_ticket_assigned_estimation_fields
+customer_support.patches.v1_0.add_hd_ticket_reference_fields
+customer_support.patches.v1_0.add_escalation_fields_hd_ticket
+customer_support.patches.v1_0.add_task_hd_ticket_fields
+customer_support.patches.v1_0.add_hd_ticket_task_fields
+customer_support.patches.v1_0.add_hd_ticket_customer_field
+customer_support.patches.v1_0.fix_hd_ticket_notification_module
+customer_support.patches.v1_0.add_hd_ticket_follow_up_fields
+customer_support.patches.v1_0.add_ticket_sync_fields
+customer_support.patches.v1_0.add_user_company_field
