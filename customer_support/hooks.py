@@ -205,8 +205,12 @@ doc_events = {
 scheduler_events = {
 	"cron": {
 		"* * * * *": [  # Every minute
-			"customer_support.customer_support.scheduler.check_escalation_notifications",
-			"customer_support.customer_support.sync_tickets.sync_remote_tickets"
+			"customer_support.customer_support.scheduler.check_escalation_notifications"
+		],
+		# Ticket sync - runs every 15 minutes
+		# Change this cron expression to adjust sync frequency
+		"*/15 * * * *": [  # Every 15 minutes
+			"customer_support.customer_support.scheduler.sync_tickets_from_remote_sites"
 		]
 	}
 }
