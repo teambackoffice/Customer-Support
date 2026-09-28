@@ -2,13 +2,16 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
 from frappe.utils import flt
 
+# Extend ERPNext's Task so its validation, progress and tree logic still run.
+from erpnext.projects.doctype.task.task import Task as ERPNextTask
 
-class Task(Document):
+
+class Task(ERPNextTask):
 	def validate(self):
 		"""Validate task and calculate total hours"""
+		super().validate()
 		self.calculate_total_hours()
 		
 	def calculate_total_hours(self):
